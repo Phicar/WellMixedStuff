@@ -211,6 +211,24 @@ def Denspart(n,p):
 			posr[i]=0
 	#print("jode")
 	return sum(posr)-1
+def Densperm(n,pr):
+	global esta
+	p = pr.to_cycles()
+        posr = [1 for r in range(0,n+1)]
+        for xx in p:
+		x=set(xx)
+                mi = min(x)
+                ma = max(x)
+                #print(p,x,mi,ma)
+                for i in range(1,mi):
+                        posr[i] = 0
+                for i in range(ma+1,n+1):
+                        posr[i]=0
+        if sum(posr)==2:
+		for j in range(0,len(posr)):
+			esta[j]+=posr[j]
+		#print(p,posr[1:],esta)
+        return sum(posr)-1
 #bruteforce Dens partition polynomial
 def DensPolPar(n,x):
 	tal = [0 for i in range(0,n+1)]
@@ -222,5 +240,29 @@ def DensPolPar(n,x):
 	for i in range(0,n+1):
 		f+=tal[i]*x^i
 	return f
+def DensPolPer(n,x):
+	global esta
+	esta = [0 for i in range(0,n+1)]
+        tal = [0 for i in range(0,n+1)]
+        for p in Permutations(n):
+                pp = Densperm(n,p)
+                #print(p,pp,len(tal))
+                tal[pp]+=1
+        f(x)=0
+        for i in range(0,n+1):
+                f+=tal[i]*x^i
+	print(esta,n)
+	esta2 = [0 for i in range(0,n+2)]
+	for k in range(1,n+1):
+		esta2[k]= esta[k-1]*(k-1)+(n+1-k)*esta[k]
+	esta2[n+1]=0
+	print(esta2)
+        return f
+
 	
-	
+def coefZeroPar(n):
+	s = 0
+	for r in range(1,n):
+		for i in range(1,n-r+1):
+			s+=stirling_number2(n-r,i)*(stirling_number2(r-1,i)*factorial(i)+stirling_number2(r-1,i+1)*factorial(i+1))
+	return bell_number(n)-1-s
